@@ -1,4 +1,4 @@
-# Avinash-itemcatalog-shoes
+##Avinash-itemcatalog-shoes
 ## Item-Catalog Shoe Carnival 
 By Chekuri Avinash
 
@@ -10,8 +10,7 @@ This is web application to  build with python framework flask.This application g
 
 ## Requirements
  
-- python
- 3 or python 2.7
+- python3 or python 2.7
 - Flask Framework
 
 - Oauth2client
@@ -64,28 +63,20 @@ This is web application to  build with python framework flask.This application g
   
   These instructions assume you have the Udacity-provided Virtual machine
   
-  Clone the Udacity Vagrantfile
-  
-and   Go to Vagrant directory and either clone this repo or download and place zip here
-  
-  `vagrant up`
-  `vagrant ssh`
-
- Connecting vagrant after goto to Shared folders,
--goto Project Folder
- The entry point for this project is shoes_project.py
-  run this file using
-  ```
-  $python  shoes_project.py
-
-  ```
+ ## How to Install
+ -->Install Vagrant & VirtualBox
+ -->Clone the Udacity Vagrantfile
+--> Go to Vagrant directory and either clone this repo or download and place zip here
+--> Launch the Vagrant VM (`vagrant up`)
+--> Log into Vagrant VM (`vagrant ssh`)
+--> Navigate to `cd/vagrant` as instructed in terminal
+--> The app imports requests which is not on this vm. Run pip install requests
   
 After this if all goes well access your web application from [http://localhost:5000]
  
 ## `JSON Endpoint`
 
-  -'/brand/JSON'- Displays the Brands and Models data
-  
+  -'JSON: /brand/JSON'  Displays the Brands and Models data
   - '/brand/<int:brand_id>/JSON'
 
 
