@@ -82,7 +82,7 @@ def gconnect():
     if result['issued_to'] != CLIENT_ID:
         response = make_response(
             json.dumps("Token's client ID does not match app's."), 401)
-        print "Token's client ID does not match app's."
+        print("Token's client ID does not match app's.")
         response.headers['Content-Type'] = 'application/json'
         return response
     # Access tokens are stored
@@ -106,7 +106,6 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
-    
     user_id = getUserID(login_session['email'])
     if not user_id:
         user_id = createUser(login_session)
@@ -168,10 +167,10 @@ def gdisconnect():
         del login_session['picture']
         del login_session['user_id']
 
-        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response = make_response(json.dumps('Disconnected....!'), 200)
         response.headers['Content-Type'] = 'application/json'
         response = redirect(url_for('S_Brands'))
-        flash('Successfully Logged Out')
+        flash('LoggedOut Successfully')
         return response
     else:
         response = make_response(
@@ -180,7 +179,7 @@ def gdisconnect():
         return response
 
 # JSON END API's
-# returns all models of particular brand
+
 
 @app.route('/brand/JSON')
 def jsonbrand():
@@ -188,6 +187,7 @@ def jsonbrand():
     brand = session.query(Brands)
     session.close()
     return jsonify(brand=[i.serialize for i in brand])
+
 
 @app.route('/brands/<int:brand_id>/models/<int:model_id>/JSON')
 def jsonbrandsModels(brand_id, model_id):
@@ -210,6 +210,23 @@ def jsonbrandModels(brand_id):
 
 
 # To See All Brands and Users Created
+@app.route('/brand')
+def S_Brand():
+    try:
+        session = DBSession()
+        brands = session.query(Brands).order_by(asc(Brands.name)).all()
+        if not brands:
+            # print Message
+            flash("No Brands to show.")
+        session.close()
+        return render_template(
+            'showbrands.html',
+            brands=brands,
+            cur_user=login_session)
+    except Exception as l:
+        print(l)
+
+# To Add New Brand
 
 
 @app.route('/')
@@ -219,26 +236,6 @@ def S_Brands():
     return render_template(
         'shoe_brands.html', brands=brands,
         cur_user=login_session)
-
-
-@app.route('/brand')
-def S_Brand():
-    try:
-        session = DBSession()
-        brands = session.query(Brands).order_by(asc(Brands.name)).all()
-        if not brands:
-            # flash message
-            flash("No Brands to show.")
-        session.close()
-        return render_template(
-            'showbrands.html',
-            brands=brands,
-            cur_user=login_session)
-    except Exception as E:
-        print(E)
-
-# To Add New Brand
-# localhost:5000/brand/new
 
 
 @app.route('/brand/new', methods=['GET', 'POST'])
@@ -251,19 +248,18 @@ def Brand_New():
             session = DBSession()
             session.add(newBrd)
             session.commit()
-            '''flash message'''
-            flash(newBrd.name + "Brand successfully added.")
+            '''printing message'''
+            flash(newBrd.name + "Shoe brand added Successfully.")
             session.close()
             return redirect('/')
         else:
             return render_template('new_brand.html', cur_user=login_session)
     else:
-        # flash message
-        flash("Login to Proceed !")
+        # Printing message
+        flash("Login sucessfully...... !")
         return redirect('/login')
 
-# To Edit Brand
-# localhost:5000/brand/brand_id/edit
+# Edit Brand
 
 
 @app.route('/brand/<int:brand_id>/edit', methods=['GET', 'POST'])
@@ -279,7 +275,7 @@ def Brand_Edit(brand_id):
                 session.commit()
                 # Print message
                 flash(
-                    before + " Brand successfully changed as " + editBrd.name)
+                    before + " brand name is Changed  " + editBrd.name)
                 session.close()
                 return redirect('/')
             else:
@@ -289,16 +285,15 @@ def Brand_Edit(brand_id):
                     cur_user=login_session)
         else:
             # Print message
-            flash("Permissions deniend !,U Do not Edit Brand")
+            flash("you are not authorized to change")
             return redirect('/')
     else:
         # Print message
-        flash("Login to Proceed !")
+        flash("Login sucessful.......... !")
         return redirect('/login')
 
 
-# To Delete Particular Brand
-# localhost:5000/brand/brand_id/delete
+# To Delete a selected Brand
 @app.route('/brand/<int:brand_id>/delete', methods=['GET', 'POST'])
 def Brand_Delete(brand_id):
     session = DBSession()
@@ -316,7 +311,7 @@ def Brand_Delete(brand_id):
                 session.delete(deleteBrd)
                 session.commit()
                 # Print message
-                flash(deleteBrd.name + " Brand, successfully deleted.")
+                flash(deleteBrd.name + " Brand deleted successfully.....!")
                 session.close()
                 return redirect('/')
             else:
@@ -326,18 +321,15 @@ def Brand_Delete(brand_id):
                     cur_user=login_session)
         else:
             # flash message
-            flash("Permissions deniend !,U Do not Delete Brand")
+            flash("you are not authorized to delete")
             return redirect('/')
     else:
         # flash message....
-        flash("Login to Proceed !")
+        flash("Login sucessful.... !")
         return redirect('/login')
 
 
 # To See All Models
-# localhost:5000/brand/brand_id/model/
-# localhost:5000/brand/brand_id/
-
 @app.route('/brand/<int:brand_id>/model')
 def S_Model(brand_id):
         session = DBSession()
@@ -346,6 +338,7 @@ def S_Model(brand_id):
         return render_template(
             'SMusers.html', brand=brand,
             model=model, cur_user=login_session)
+
 # Show models for users data
 
 
@@ -356,15 +349,15 @@ def S_Models(brand_id):
         brand = session.query(Brands).filter_by(id=brand_id).one()
 
         if not model:
-            # flash message
-            flash("No Models to show.")
+            # print message
+            flash("Dont have any Models to show.")
         session.close()
         return render_template(
             'SMusers.html',
             brand=brand,
             model=model,
             cur_user=login_session)
-    except Exception as E:
+    except Exception as l:
         return "<h4>I am coming to here</h4>"
 
 
@@ -388,7 +381,7 @@ def Model_New(brand_id):
                 # To store data in Permanently
                 session.commit()
                 # flash message
-                flash(" Model, successfully added to %s" % brand.name)
+                flash("  New Model added successfully to %s" % brand.name)
                 session.close()
                 return redirect(url_for('S_Model', brand_id=brand_id))
             else:
@@ -397,17 +390,16 @@ def Model_New(brand_id):
                     brand=brand,
                     cur_user=login_session)
         else:
-            # flash message
-            flash("Permissions deniend !,U Do not Create Model")
+            # print message
+            flash("you are not having any permissions")
             return redirect('/')
     else:
-        # flash message
-        flash("Login to Proceed !")
+        # print message
+        flash("Login sucessful.... !")
         return redirect('/login')
 
 
-# To Edit Model
-# localhost:5000/brand/brand_id/model/model_id/edit
+# To Edit the  Model
 
 
 @app.route(
@@ -427,8 +419,8 @@ def Model_Edit(brand_id, model_id):
                 editMod.description = request.form['description']
                 session.add(editMod)
                 session.commit()
-                # flash message
-                flash("Successfully Changes have done!")
+                # print message
+                flash("you have done changes Successfully")
                 session.close()
                 return redirect(url_for('S_Model', brand_id=brand_id))
             else:
@@ -437,17 +429,17 @@ def Model_Edit(brand_id, model_id):
                     model_id=model_id, edit=editMod,
                     cur_user=login_session)
         else:
-            # flash message
-            flash("Permissions deniend !,U Do not Edit Model")
+            # print message
+            flash("you are not autorized to edit")
             return redirect('/')
     else:
-        # flash message
-        flash("Login to Proceed !")
+        # print message
+        flash("Login sucessful ...!")
         return redirect('/login')
 
 
-# To Delete Model
-# localhost:5000/brand/brand_id/model/model_id/delete
+# To Delete a Model
+
 
 @app.route(
     '/brand/<int:brand_id>/model/<int:model_id>/delete',
@@ -461,7 +453,7 @@ def Model_Delete(brand_id, model_id):
             if request.method == 'POST':
                 session.delete(deleteMod)
                 session.commit()
-                flash(" Model Successfully deleted.")
+                flash(" Model deleted Successfully....")
                 return redirect(url_for('S_Model', brand_id=brand_id))
 
             else:
@@ -470,12 +462,12 @@ def Model_Delete(brand_id, model_id):
                     model=deleteMod, cur_user=login_session)
                 session.close()
         else:
-            # flash message
-            flash("Permissions deniend !,U Do not Delete Model")
+            # print message
+            flash("you dont have permissions to delete")
             return redirect('/')
     else:
-        # flash message
-        flash("Login to Proceed !")
+        # print message
+        flash("Login sucessful...... !")
         return redirect('/login')
 # default constructor
 if __name__ == '__main__':
