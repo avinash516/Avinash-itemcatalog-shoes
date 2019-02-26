@@ -63,7 +63,7 @@ This is web application to  build with python framework flask.This application g
   
   These instructions assume you have the Udacity-provided Virtual machine
   
- ## How to Install
+ ## How to Install:
  -->Install Vagrant & VirtualBox
  -->Clone the Udacity Vagrantfile
 --> Go to Vagrant directory and either clone this repo or download and place zip here
