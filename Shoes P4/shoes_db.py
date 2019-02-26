@@ -57,8 +57,8 @@ class Models(Base):
     price = Column(String(20))
     description = Column(String(500))
 
-    brands = relationship(Brands)
-    users = relationship(Userdata)
+    brands = relationship(Brands,backref=backref('models', cascade='all, delete')
+    users = relationship(Userdata,backref="models")
 
     @property
     def serialize(self):
