@@ -40,14 +40,9 @@ session.add(Brand2)
 session.commit
 
 try:
-    Model1 = Models(id=101,
-                       brand_id=2,
-                       user_id=1,
-                       modelnumber="123",
-                       colors="Red",
-                       price="15000",
-                       description="Quality is Fine")
-
+    Model1 = Models(id=101, brand_id=2,
+                    user_id=1, modelnumber="123",
+                    colors="Red", price="15000", description="Quality is Fine")
     session.add(Model1)
     session.commit()
 except Exception as ex:
@@ -55,13 +50,12 @@ except Exception as ex:
 
 try:
     Model2 = Models(id=102,
-                       brand_id=3,
-                       user_id=1,
-                       modelnumber="1429",
-                       colors="Black",
-                       price="300",
-                       description="Good Quality")
-
+                    brand_id=3,
+                    user_id=1,
+                    modelnumber="1429",
+                    colors="Black",
+                    price="300",
+                    description="Good Quality")
     session.add(Model2)
     session.commit()
 except Exception as ex:
