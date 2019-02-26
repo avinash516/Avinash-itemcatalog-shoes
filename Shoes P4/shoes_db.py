@@ -1,10 +1,8 @@
-
 import sys
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-
+from sqlalchemy.orm import relationship, backref
 Base = declarative_base()
 
 
@@ -33,7 +31,7 @@ class Brands(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     name = Column(String(50), nullable=False)
 
-    user = relationship(Userdata)
+    user = relationship(Userdata, backref="brands")
 
     @property
     def serialize(self):
@@ -57,8 +55,9 @@ class Models(Base):
     price = Column(String(20))
     description = Column(String(500))
 
-    brands = relationship(Brands,backref=backref('models', cascade='all, delete')
-    users = relationship(Userdata,backref="models")
+    brands = relationship(Brands, backref=backref('models',
+                          cascade='all, delete'))
+    users = relationship(Userdata, backref="models")
 
     @property
     def serialize(self):
